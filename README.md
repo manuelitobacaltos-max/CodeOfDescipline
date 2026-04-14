@@ -1,0 +1,2 @@
+# CodeOfDescipline
+Human Resources Manifesto
