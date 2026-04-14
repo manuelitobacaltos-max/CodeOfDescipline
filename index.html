@@ -3,159 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Discipline FAQ Chatbot</title>
+    <title>HR FAQ Chatbot</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .chat-container {
-            width: 100%;
-            max-width: 600px;
-            height: 80vh;
-            background: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .chat-header {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 15px;
-            line-height: 1.4;
-            font-size: 0.95rem;
-        }
-        .bot {
-            background: #e1f5fe;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            color: #01579b;
-        }
-        .user {
-            background: #2c3e50;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-        .chat-input {
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            background: #fff;
-        }
-        select {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            outline: none;
-        }
-        button {
-            padding: 10px 20px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #219150;
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .chat-container { width: 400px; height: 500px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; }
+        #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+        .message { padding: 10px 15px; border-radius: 18px; max-width: 80%; font-size: 14px; line-height: 1.4; }
+        .bot-msg { background: #e4e6eb; color: black; align-self: flex-start; }
+        .user-msg { background: #0084ff; color: white; align-self: flex-end; }
+        .input-area { padding: 10px; border-top: 1px solid #ddd; display: flex; gap: 5px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; outline: none; }
+        button { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="chat-container">
-    <div class="chat-header">🤖 Employee Discipline FAQ Bot</div>
-    <div class="chat-messages" id="chat-box">
-        <div class="message bot">Hello! I am your Employee Discipline Guide. How can I help you today? Please select a question below.</div>
+    <div id="chat-box">
+        <div class="message bot-msg">Hello! Mag-type lang para makita ang mga FAQ suggestions.</div>
     </div>
-    <div class="chat-input">
-        <select id="question-select">
-            <option value="">-- Choose a Question --</option>
-            <option value="1">1. Purpose of the Manual</option>
-            <option value="2">2. Companies Covered</option>
-            <option value="3">3. Notice to Explain (NTE)</option>
-            <option value="4">4. Investigation Committee</option>
-            <option value="5">5. Simple Offenses vs Serious</option>
-            <option value="6">6. Tardiness Penalties</option>
-            <option value="7">7. Abandonment of Work</option>
-            <option value="8">8. Honesty and Integrity</option>
-            <option value="9">9. Use of Company Materials</option>
-            <option value="10">10. Insubordination</option>
-            <option value="11">11. Fighting/Threats</option>
-            <option value="12">12. Uniform and ID Policy</option>
-            <option value="13">13. Alcohol and Drugs</option>
-        </select>
-        <button onclick="askQuestion()">Ask</button>
+    <div class="input-area">
+        <input type="text" id="user-input" list="faq-options" placeholder="Type a question..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <datalist id="faq-options">
+            <option value="What is the Code of Discipline?">
+            <option value="How to file a leave?">
+            <option value="What is the dress code?">
+            <option value="Late and Tardiness policy?">
+            <option value="Overtime pay rules?">
+            <option value="Payroll schedule?">
+            <option value="Health insurance benefits?">
+            <option value="Resignation process?">
+            <option value="Performance evaluation?">
+            <option value="Maternity/Paternity leave?">
+            <option value="Emergency contact update?">
+            <option value="Office hours?">
+            <option value="Holiday pay?">
+        </datalist>
+        <button onclick="sendMessage()">Send</button>
     </div>
 </div>
 
 <script>
+    // I-match ang value dito sa nasa datalist sa itaas
     const faqs = {
-        "1": "The manual is designed to ensure the efficient conduct of employees and to provide a clear, uniform, and fair procedure for administering disciplinary actions.",
-        "2": "It applies to all employees under Vienovo Philippines Inc., Eurolab Phil-French Laboratory Services, Inc., and Agrilife Agrivet Supplies OPC.",
-        "3": "An employee issued an NTE is given the opportunity to explain, within three (3) days, why no disciplinary action should be taken against them.",
-        "4": "The committee consists of a Colleague, the Department Head, the Human Resources Manager, and a Security Officer if security concerns are involved.",
-        "5": "Simple offenses (Verbal/Written) may be disregarded after 12 months if not repeated. Sanctions involving Suspension remain on the permanent record.",
-        "6": "Tardiness 2x a month (past 60-min grace period) leads to a Written Warning (1st) up to Dismissal (5th).",
-        "7": "Absence without leave for 4+ consecutive days is classified as Abandonment and carries a penalty of Dismissal on the 1st offense.",
-        "8": "The company has zero tolerance for dishonesty. Acts like falsification, stealing, or withholding collections result in immediate Dismissal.",
-        "9": "Unauthorized use of company time or materials results in a 10-day suspension (1st) and Dismissal (2nd).",
-        "10": "Refusal to follow instructions results in a Written Warning (1st), 3-day Suspension (2nd), and Dismissal (3rd).",
-        "11": "Fighting results in a 5-day suspension (1st) and Dismissal (2nd). Threatening can lead to immediate Dismissal depending on gravity.",
-        "12": "Failing to wear uniform/ID starts with a Verbal Warning and can reach Dismissal on the 5th offense.",
-        "13": "Reporting under the influence of alcohol leads to suspension/dismissal. Possession of drugs results in immediate Dismissal and Legal Action."
+        "what is the code of discipline?": "The Code of Discipline is the standard of conduct for all employees.",
+        "how to file a leave?": "Submit your leave form via the HR portal 3 days before the date.",
+        "what is the dress code?": "Mon-Thu is Business Casual, Friday is Wash Day.",
+        "late and tardiness policy?": "Three lates in a month may result in a verbal warning.",
+        "overtime pay rules?": "OT must be pre-approved by your supervisor.",
+        "payroll schedule?": "Salaries are released every 15th and 30th of the month.",
+        "health insurance benefits?": "HMO coverage starts after the 6th month of employment.",
+        "resignation process?": "A 30-day notice period is required for all resignations.",
+        "performance evaluation?": "Evaluations are conducted every 6 months.",
+        "maternity/paternity leave?": "Please submit your SBR requirements 2 months in advance.",
+        "emergency contact update?": "Update your 201 file at the HR office.",
+        "office hours?": "Regular office hours are from 8:00 AM to 5:00 PM.",
+        "holiday pay?": "Holiday pay follows the standard DOLE regulations."
     };
 
-    function askQuestion() {
-        const select = document.getElementById('question-select');
-        const questionId = select.value;
-        const chatBox = document.getElementById('chat-box');
+    function sendMessage() {
+        const inputField = document.getElementById("user-input");
+        const chatBox = document.getElementById("chat-box");
+        const rawInput = inputField.value.trim();
+        const userInput = rawInput.toLowerCase();
 
-        if (questionId === "") return;
+        if (userInput === "") return;
 
-        // User Message
-        const userMsg = document.createElement('div');
-        userMsg.className = 'message user';
-        userMsg.innerText = select.options[select.selectedIndex].text;
-        chatBox.appendChild(userMsg);
+        // Display User Message
+        chatBox.innerHTML += `<div class="message user-msg">${rawInput}</div>`;
 
-        // Bot Response
+        // Bot Logic
+        let botResponse = "Please contact Ms. Jhane Bellita for some HR concern.";
+        
+        // Eksaktong paghahanap sa FAQ keys
+        if (faqs[userInput]) {
+            botResponse = faqs[userInput];
+        }
+
+        // Display Bot Response
         setTimeout(() => {
-            const botMsg = document.createElement('div');
-            botMsg.className = 'message bot';
-            botMsg.innerText = faqs[questionId];
-            chatBox.appendChild(botMsg);
+            chatBox.innerHTML += `<div class="message bot-msg">${botResponse}</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
-        }, 500);
+        }, 300);
 
-        select.value = "";
+        inputField.value = "";
     }
 </script>
 
