@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Discipline FAQ Chatbot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            line-height: 1.4;
+            font-size: 0.95rem;
+        }
+        .bot {
+            background: #e1f5fe;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            color: #01579b;
+        }
+        .user {
+            background: #2c3e50;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .chat-input {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            background: #fff;
+        }
+        select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #219150;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">🤖 Employee Discipline FAQ Bot</div>
+    <div class="chat-messages" id="chat-box">
+        <div class="message bot">Hello! I am your Employee Discipline Guide. How can I help you today? Please select a question below.</div>
+    </div>
+    <div class="chat-input">
+        <select id="question-select">
+            <option value="">-- Choose a Question --</option>
+            <option value="1">1. Purpose of the Manual</option>
+            <option value="2">2. Companies Covered</option>
+            <option value="3">3. Notice to Explain (NTE)</option>
+            <option value="4">4. Investigation Committee</option>
+            <option value="5">5. Simple Offenses vs Serious</option>
+            <option value="6">6. Tardiness Penalties</option>
+            <option value="7">7. Abandonment of Work</option>
+            <option value="8">8. Honesty and Integrity</option>
+            <option value="9">9. Use of Company Materials</option>
+            <option value="10">10. Insubordination</option>
+            <option value="11">11. Fighting/Threats</option>
+            <option value="12">12. Uniform and ID Policy</option>
+            <option value="13">13. Alcohol and Drugs</option>
+        </select>
+        <button onclick="askQuestion()">Ask</button>
+    </div>
+</div>
+
+<script>
+    const faqs = {
+        "1": "The manual is designed to ensure the efficient conduct of employees and to provide a clear, uniform, and fair procedure for administering disciplinary actions.",
+        "2": "It applies to all employees under Vienovo Philippines Inc., Eurolab Phil-French Laboratory Services, Inc., and Agrilife Agrivet Supplies OPC.",
+        "3": "An employee issued an NTE is given the opportunity to explain, within three (3) days, why no disciplinary action should be taken against them.",
+        "4": "The committee consists of a Colleague, the Department Head, the Human Resources Manager, and a Security Officer if security concerns are involved.",
+        "5": "Simple offenses (Verbal/Written) may be disregarded after 12 months if not repeated. Sanctions involving Suspension remain on the permanent record.",
+        "6": "Tardiness 2x a month (past 60-min grace period) leads to a Written Warning (1st) up to Dismissal (5th).",
+        "7": "Absence without leave for 4+ consecutive days is classified as Abandonment and carries a penalty of Dismissal on the 1st offense.",
+        "8": "The company has zero tolerance for dishonesty. Acts like falsification, stealing, or withholding collections result in immediate Dismissal.",
+        "9": "Unauthorized use of company time or materials results in a 10-day suspension (1st) and Dismissal (2nd).",
+        "10": "Refusal to follow instructions results in a Written Warning (1st), 3-day Suspension (2nd), and Dismissal (3rd).",
+        "11": "Fighting results in a 5-day suspension (1st) and Dismissal (2nd). Threatening can lead to immediate Dismissal depending on gravity.",
+        "12": "Failing to wear uniform/ID starts with a Verbal Warning and can reach Dismissal on the 5th offense.",
+        "13": "Reporting under the influence of alcohol leads to suspension/dismissal. Possession of drugs results in immediate Dismissal and Legal Action."
+    };
+
+    function askQuestion() {
+        const select = document.getElementById('question-select');
+        const questionId = select.value;
+        const chatBox = document.getElementById('chat-box');
+
+        if (questionId === "") return;
+
+        // User Message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message user';
+        userMsg.innerText = select.options[select.selectedIndex].text;
+        chatBox.appendChild(userMsg);
+
+        // Bot Response
+        setTimeout(() => {
+            const botMsg = document.createElement('div');
+            botMsg.className = 'message bot';
+            botMsg.innerText = faqs[questionId];
+            chatBox.appendChild(botMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 500);
+
+        select.value = "";
+    }
+</script>
+
+</body>
+</html>
